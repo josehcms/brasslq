@@ -306,11 +306,11 @@ brass_estimate_coeffs =
     map_moage_to_a = c( 1, 2, 3, 5, 10, 15, 20 )
     names( map_moage_to_a ) = paste0( seq( 15, 45, 5 ), '-', seq( 15, 45, 5 )+4 )
     # life table for both sexes for children - derived from logquad
-    mlt_total = qx_from_extented_lq( sex = 'total', q5 = q5, k = k )
+    mlt_total = qx_from_extended_lq( sex = 'total', q5 = q5, k = k )
     ages_qx = mlt_total$x
     qx = mlt_total$qx
     # life table for women - derived from logquad
-    mlt_females = qx_from_extented_lq( sex = 'female', q5 = q5, k = k )
+    mlt_females = qx_from_extended_lq( sex = 'female', q5 = q5, k = k )
     ages_LxF = mlt_females$x
     LxF = qx_to_Lx( x = ages_LxF, qx = mlt_females$qx )
 

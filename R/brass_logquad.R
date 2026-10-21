@@ -71,7 +71,7 @@ brass_logquad =
 
     brass_logquad_result =
       data.frame( ref_date = brass_result[ 4, ]$ref_date,
-                  qx_from_extended_lq( q5 = brass_result[ 4, ]$qx_hat, k = k ) )
+                  qx_from_extended_lq( q5 = brass_result[ 4, ]$qa_hat, k = k ) )
 
     brass_list =
       list(

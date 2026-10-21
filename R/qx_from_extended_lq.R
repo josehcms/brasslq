@@ -21,7 +21,8 @@
 #' @export
 #'
 #'
-qx_from_extented_lq =
+
+qx_from_extended_lq =
   function( sex = 'total', q5, k ){
     this_sex = sex
     mortality_lq = subset( extlogquad_coeffs, sex == this_sex )
