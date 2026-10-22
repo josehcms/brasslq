@@ -14,7 +14,7 @@ Lx_to_Sx(x, Lx, l0 = 1)
 \item{l0}{life table radix, set to 1}
 }
 \value{
-\code{Sx} probability of surviving from one age group to the next age group
+Probability of surviving from one age group to the next age group, Sx
 }
 \description{
 This function converts person-years lived between ages x and x+n nLx

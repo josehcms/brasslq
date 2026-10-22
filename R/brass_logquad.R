@@ -21,11 +21,11 @@
 #' @param fertility_schedules a data frame with three columns 'id', which identifies
 #' the id of a fertility schedule, 'x' for the lower bound of that age group,
 #' and 'fx' for the fertility rate of age group x
-#' @param q5 desired level of under-5 mortality rate
 #' @param k value of k parameter in the log-quadratic model (only applied to ages below 5)
 #' @param r stable population growth rate
 #' @param Rd linear rate of mortality decline
-#' @param tol tolerance level for q5 convergence (default = 10^-6)
+#' @param q5_init initial q5 for starting iterative Brass-Log-Quadratic approach
+#' @param tol tolerance level for q5 convergence (default = 10^-4) in iteration
 #'
 #' @return A \code{list} with two data frames: one containing the final iterative Brass results
 #' (qa_hat, coefficients), and a second one containing the final dataset corresponding
@@ -58,16 +58,18 @@ brass_logquad =
             P1, P2, P3, tsurv,
             fertility_schedules,
             k = 0,
-            r = 0.02, Rd = 0.03 ){
+            r = 0.02, Rd = 0.03,
+            q5_init = 0.150,
+            tol = 10^-4 ){
 
     brass_result =
       brass_iterate( PDx5,
                      P1, P2, P3,
                      tsurv,
                      fertility_schedules,
-                     k, q5 = 0.150,
+                     k, q5 = q5_init,
                      r, Rd,
-                     tol = 10^-4 )
+                     tol )
 
     brass_logquad_result =
       data.frame( ref_date = brass_result[ 4, ]$ref_date,

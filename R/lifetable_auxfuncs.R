@@ -6,9 +6,9 @@
 #' @param x vector of ages matching the qx vector
 #' @param qx vector of probabilities of dying before age x
 #'
-#' @return \code{lx} number of individuals surviving up to age x in life table
+#' @return The number of individuals surviving up to age x, lx, in life table
+#' @name qx_to_lx
 #' @export
-
 qx_to_lx = function( x, qx ){
   stopifnot( length( x ) == length( qx ) )
   n_qx = length( qx )
@@ -27,9 +27,8 @@ qx_to_lx = function( x, qx ){
 #' @param x vector of ages matching the lx vector
 #' @param lx vector of number of individuals surviving up to age x in life table
 #'
-#' @return \code{Lx} life table person-years lived between ages x and x+n
+#' @return Life table person-years lived between ages x and x+n, Lx
 #' @export
-#'
 lx_to_Lx = function( x, lx ){
   stopifnot( length( x ) == length( lx ) )
   n_lx = length( lx )
@@ -52,9 +51,10 @@ lx_to_Lx = function( x, lx ){
 #' @param x vector of ages matching the qx vector
 #' @param qx vector of probabilities of dying before age x
 #'
-#' @return \code{Lx} person-years lived between ages x and x+n Lx of a life table
+#' @return Person-years lived between ages x and x+n Lx of a life table, Lx
+#' @rdname qx_to_Lx-conversion
+#' @name qx_to_Lx
 #' @export
-#'
 qx_to_Lx = function( x, qx ){
   lx_to_Lx( x, qx_to_lx( x, qx ) )
 }
@@ -69,9 +69,8 @@ qx_to_Lx = function( x, qx ){
 #' @param Lx vector of person-years lived between ages x and x+n nLx
 #' @param l0 life table radix, set to 1
 #'
-#' @return \code{Sx} probability of surviving from one age group to the next age group
+#' @return Probability of surviving from one age group to the next age group, Sx
 #' @export
-#'
 Lx_to_Sx = function( x, Lx, l0 = 1 ){
   n = diff(x)
   n_Lx = length( Lx )

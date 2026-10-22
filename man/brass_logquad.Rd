@@ -13,7 +13,9 @@ brass_logquad(
   fertility_schedules,
   k = 0,
   r = 0.02,
-  Rd = 0.03
+  Rd = 0.03,
+  q5_init = 0.15,
+  tol = 10^-4
 )
 }
 \arguments{
@@ -37,9 +39,9 @@ and 'fx' for the fertility rate of age group x}
 
 \item{Rd}{linear rate of mortality decline}
 
-\item{q5}{desired level of under-5 mortality rate}
+\item{q5_init}{initial q5 for starting iterative Brass-Log-Quadratic approach}
 
-\item{tol}{tolerance level for q5 convergence (default = 10^-6)}
+\item{tol}{tolerance level for q5 convergence (default = 10^-4) in iteration}
 }
 \value{
 A \code{list} with two data frames: one containing the final iterative Brass results

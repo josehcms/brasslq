@@ -1,10 +1,10 @@
-#' Generate ${_5}{PD}{_x}$ and ${_5}{t}{_x}$
+#' Generate 5PDx and 5tx
 #'
 #' The goal of this function is to estimate the independent and dependent
 #' variables to be used in the Brass regression model for each pair of
 #' mortality and fertility schedules.This function estimates the proportion of
-#' children dead by mother's 5-year age groups, ${_5}{PD}{_x}$,
-#' and the time shift, ${_5}{t}{_x}$, associated with the linear period
+#' children dead by mother's 5-year age groups, 5PDx,
+#' and the time shift, 5tx, associated with the linear period
 #' mortality decline assumption. Also, it gives the mean parities
 #' of age groups 15-19 (P1), 20-24 (P2), and 25-29 (P3).
 #'
@@ -27,10 +27,9 @@
 #'   \item{qa}{Probability of dying between birth (age 0) and age a}
 #'   \item{5PDx}{Expected proportion of children deceased among mother's of that age group given the mortality and fertility inputs}
 #'   \item{tx5}{Years before reference period to which the period qa value prevails}
-#'   \item{P1} Mean number of children ever born to women in ages 15-19
-#'   \item{P2} Mean number of children ever born to women in ages 20-24
-#'   \item{P3} Mean number of children ever born to women in ages 25-29
-#'
+#'   \item{P1}{Mean number of children ever born to women in ages 15-19}
+#'   \item{P2}{Mean number of children ever born to women in ages 20-24}
+#'   \item{P3}{Mean number of children ever born to women in ages 25-29}
 #' }
 #' @export
 
@@ -97,10 +96,10 @@ generate_PDx5_tx5 = function( ages_qx, qx,
     Pat = Lxt[ select_ages, ] / ( 1 * n_qa )
 
     # get granular fertility values
-    fa = approx( x = ages_fx + 0.5,
-                 y = fx,
-                 xout = ages_fa_start + n_fa/2,
-                 rule = 2 )$y
+    fa = stats::approx( x = ages_fx + 0.5,
+                        y = fx,
+                        xout = ages_fa_start + n_fa/2,
+                        rule = 2 )$y
 
     # calculate number of children born within each age interval (fertility weights)
     w_fa = fa * n_fa
@@ -167,10 +166,10 @@ generate_PDx5_tx5 = function( ages_qx, qx,
     Pca = Pcx[ select_ages ]
 
     # get granular fertility values
-    fa = approx( x = ages_fx + 0.5,
-                 y = fx,
-                 xout = ages_fa_start + n_fa/2,
-                 rule = 2 )$y
+    fa = stats::approx( x = ages_fx + 0.5,
+                        y = fx,
+                        xout = ages_fa_start + n_fa/2,
+                        rule = 2 )$y
 
     # calculate number of children born within each age interval (fertility weights)
     w_fa = fa * n_fa
@@ -190,10 +189,10 @@ generate_PDx5_tx5 = function( ages_qx, qx,
     y = moage_range[i]
     j = which( reproductive_span == y )
     tx[ i ] =
-      approx( xout = PDxc[ j ],
-              x = PDxt[ j, ],
-              y = times,
-              rule = 2 )$y
+      stats::approx( xout = PDxc[ j ],
+                     x = PDxt[ j, ],
+                     y = times,
+                     rule = 2 )$y
   }
 
   # 3) Calculate 5PDx and 5tx, for mother's age groups [x,x+5]
@@ -213,8 +212,8 @@ generate_PDx5_tx5 = function( ages_qx, qx,
                  function( x ){
                    x_range = x:(x+4)
                    PDx5 =
-                     weighted.mean( x = PDx[ which( reproductive_span %in% x_range ) ],
-                                    w = cxF[ which( moage_range %in% x_range ) ] )
+                     stats::weighted.mean( x = PDx[ which( reproductive_span %in% x_range ) ],
+                                           w = cxF[ which( moage_range %in% x_range ) ] )
                    return( PDx5 )
                  })
   ## 3.C) Calculate 5tx using cxF weights 5tx = sum( tx * cxF )
@@ -222,19 +221,19 @@ generate_PDx5_tx5 = function( ages_qx, qx,
                 function( x ){
                   x_range = x:(x+4)
                   tx5 =
-                    weighted.mean( x = tx[ which( moage_range %in% x_range )  ],
-                                   w = cxF[ which( moage_range %in% x_range ) ] )
+                    stats::weighted.mean( x = tx[ which( moage_range %in% x_range )  ],
+                                          w = cxF[ which( moage_range %in% x_range ) ] )
                   return( tx5 )
                 })
 
   # 4) Get P1 (P20, cumulating 15-19), P2 (P25) and P3 (P30) from fertility schedules
   #CEBx
-  P1 = weighted.mean( x = CEBx[ which( reproductive_span %in% 15:19 ) ],
-                      w = cxF[ which( moage_range %in% 15:19 ) ] )
-  P2 = weighted.mean( x = CEBx[ which( reproductive_span %in% 20:24 )],
-                      w = cxF[ which( moage_range %in% 20:24 ) ] )
-  P3 = weighted.mean( x = CEBx[ which( reproductive_span %in% 25:29 ) ],
-                      w = cxF[ which( moage_range %in% 25:29 ) ] )
+  P1 = stats::weighted.mean( x = CEBx[ which( reproductive_span %in% 15:19 ) ],
+                             w = cxF[ which( moage_range %in% 15:19 ) ] )
+  P2 = stats::weighted.mean( x = CEBx[ which( reproductive_span %in% 20:24 )],
+                             w = cxF[ which( moage_range %in% 20:24 ) ] )
+  P3 = stats::weighted.mean( x = CEBx[ which( reproductive_span %in% 25:29 ) ],
+                             w = cxF[ which( moage_range %in% 25:29 ) ] )
 
   # 5) get q(a) corresponding to each mother's age group
   map_moage_to_qx =
@@ -316,7 +315,7 @@ brass_estimate_coeffs =
 
     # fertility schedules' ids
     fert_ids = unique( fertility_schedules$id )
-    pb = txtProgressBar( min = 1, max = length(fert_ids), initial = 1 )
+    pb = utils::txtProgressBar( min = 1, max = length(fert_ids), initial = 1 )
 
     regression_inputs =
       do.call(
@@ -324,7 +323,7 @@ brass_estimate_coeffs =
         lapply( fert_ids,
                 function( fert_id ){
                   # progress bar
-                  setTxtProgressBar( pb, fert_id )
+                  utils::setTxtProgressBar( pb, fert_id )
                   this_fert_sched = fertility_schedules[ which( fertility_schedules$id == fert_id ), ]
                   fx = this_fert_sched$fx
                   ages_fx = this_fert_sched$x
@@ -355,12 +354,12 @@ brass_estimate_coeffs =
                 function( this_ag ){
                   regression_inputs_ag = regression_inputs[ which( regression_inputs$moage_group == this_ag  ), ]
 
-                  reg_ag_kx = lm( k ~ 1 + P1P2 + P2P3, data = regression_inputs_ag )
-                  reg_ag_tx = lm( tx5 ~ 1 + P1P2 + P2P3, data = regression_inputs_ag )
+                  reg_ag_kx = stats::lm( k ~ 1 + P1P2 + P2P3, data = regression_inputs_ag )
+                  reg_ag_tx = stats::lm( tx5 ~ 1 + P1P2 + P2P3, data = regression_inputs_ag )
 
-                  brass_coeffs_k = coefficients( reg_ag_kx )
+                  brass_coeffs_k = stats::coefficients( reg_ag_kx )
                   names( brass_coeffs_k ) = paste0( 'a', 0:2 )
-                  brass_coeffs_t = coefficients( reg_ag_tx )
+                  brass_coeffs_t = stats::coefficients( reg_ag_tx )
                   names( brass_coeffs_t ) = paste0( 'b', 0:2 )
 
                   data.frame( moage_group = this_ag,

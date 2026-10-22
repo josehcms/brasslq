@@ -12,7 +12,7 @@ lx_to_Lx(x, lx)
 \item{lx}{vector of number of individuals surviving up to age x in life table}
 }
 \value{
-\code{Lx} life table person-years lived between ages x and x+n
+Life table person-years lived between ages x and x+n, Lx
 }
 \description{
 This function converts the number of survivors at age x lx

@@ -2,7 +2,7 @@
 % Please edit documentation in R/brass_coefficients_estimation.R
 \name{generate_PDx5_tx5}
 \alias{generate_PDx5_tx5}
-\title{Generate ${_5}{PD}{_x}$ and ${_5}{t}{_x}$}
+\title{Generate 5PDx and 5tx}
 \usage{
 generate_PDx5_tx5(ages_qx, qx, ages_fx, fx, ages_LxF, LxF, r, Rd)
 }
@@ -34,18 +34,17 @@ fertility (fx) inputs given.
 \item{qa}{Probability of dying between birth (age 0) and age a}
 \item{5PDx}{Expected proportion of children deceased among mother's of that age group given the mortality and fertility inputs}
 \item{tx5}{Years before reference period to which the period qa value prevails}
-\item{P1} Mean number of children ever born to women in ages 15-19
-\item{P2} Mean number of children ever born to women in ages 20-24
-\item{P3} Mean number of children ever born to women in ages 25-29
-
+\item{P1}{Mean number of children ever born to women in ages 15-19}
+\item{P2}{Mean number of children ever born to women in ages 20-24}
+\item{P3}{Mean number of children ever born to women in ages 25-29}
 }
 }
 \description{
 The goal of this function is to estimate the independent and dependent
 variables to be used in the Brass regression model for each pair of
 mortality and fertility schedules.This function estimates the proportion of
-children dead by mother's 5-year age groups, ${_5}{PD}{_x}$,
-and the time shift, ${_5}{t}{_x}$, associated with the linear period
+children dead by mother's 5-year age groups, 5PDx,
+and the time shift, 5tx, associated with the linear period
 mortality decline assumption. Also, it gives the mean parities
 of age groups 15-19 (P1), 20-24 (P2), and 25-29 (P3).
 }
