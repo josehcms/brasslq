@@ -5,7 +5,7 @@
 \alias{fert_scheds_un}
 \title{Fertility Schedules United Nations}
 \format{
-An object of class \code{data.table} (inherits from \code{data.frame}) with 698560 rows and 3 columns.
+An object of class \code{data.frame} with 698560 rows and 7 columns.
 }
 \usage{
 fert_scheds_un

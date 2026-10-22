@@ -330,6 +330,7 @@ brass_estimate_coeffs =
 
                   PDx5_tx5_df =
                     data.frame( fert_id = fert_id,
+                                tx_subset = unique( this_fert_sched$tx_subset ),
                                 generate_PDx5_tx5( ages_qx, qx,
                                                    ages_fx, fx,
                                                    ages_LxF, LxF,
@@ -355,7 +356,8 @@ brass_estimate_coeffs =
                   regression_inputs_ag = regression_inputs[ which( regression_inputs$moage_group == this_ag  ), ]
 
                   reg_ag_kx = stats::lm( k ~ 1 + P1P2 + P2P3, data = regression_inputs_ag )
-                  reg_ag_tx = stats::lm( tx5 ~ 1 + P1P2 + P2P3, data = regression_inputs_ag )
+                  reg_ag_tx = stats::lm( tx5 ~ 1 + P1P2 + P2P3,
+                                         data = regression_inputs_ag[ regression_inputs_ag$tx_subset == 1, ] )
 
                   brass_coeffs_k = stats::coefficients( reg_ag_kx )
                   names( brass_coeffs_k ) = paste0( 'a', 0:2 )

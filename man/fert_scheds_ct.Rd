@@ -5,7 +5,7 @@
 \alias{fert_scheds_ct}
 \title{Fertility Schedules Coale-Trussel}
 \format{
-An object of class \code{data.table} (inherits from \code{data.frame}) with 30210 rows and 3 columns.
+An object of class \code{data.frame} with 30210 rows and 4 columns.
 }
 \usage{
 fert_scheds_ct

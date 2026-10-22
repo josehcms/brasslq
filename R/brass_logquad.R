@@ -62,6 +62,7 @@ brass_logquad =
             q5_init = 0.150,
             tol = 10^-4 ){
 
+    # iterate and get final results
     brass_result =
       brass_iterate( PDx5,
                      P1, P2, P3,
@@ -71,14 +72,32 @@ brass_logquad =
                      r, Rd,
                      tol )
 
+    # Use q(a) to retrieve U5MR curves using logquad5q0 package
+    # We use q(2), q(3), q(5) only! and the selected k
     brass_logquad_result =
-      data.frame( ref_date = brass_result[ 4, ]$ref_date,
-                  qx_from_extended_lq( q5 = brass_result[ 4, ]$qa_hat, k = k ) )
+      do.call(
+        rbind,
+        lapply( c( 2, 3, 5 ),
+                function( this_a ){
+                  tmp_brass = brass_result[ brass_result$a == this_a, ]
+                  tmp_logquad_input = logquad5q0::format_data(
+                    rate      = tmp_brass$qa_hat,
+                    lower_age = 0,
+                    upper_age = 365.25*this_a,
+                    type      = "qx",
+                    sex       = "total" )
+                  tmp_logquad_res = logquad5q0::lagrange5q0( data = tmp_logquad_input, k = k )$predictions
+
+                  brasslq_out = data.frame( ref_date = tmp_brass$ref_date,
+                                            tmp_logquad_res )
+                  return( brasslq_out )
+                })
+      )
 
     brass_list =
       list(
         brasslq_iterative = brass_result,
-        u5mr_schedule = brass_logquad_result[ 1:22, ]
+        u5mr_schedule = brass_logquad_result
       )
 
     return( brass_list )
