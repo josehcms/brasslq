@@ -34,15 +34,16 @@
 #' \describe{
 #'   \item{moage_group}{Age group of mother; in five-year groups}
 #'   \item{a}{age corresponding to qa_hat estimate}
-#'   \item{a0}{intercept coefficient for qa/5PDx regression on P1/P2 and P2/P3}
-#'   \item{a1}{coefficient for P1/P2 for qa/5PDx regression on P1/P2 and P2/P3}
-#'   \item{a2}{coefficient for P2/P3 for qa/5PDx regression on P1/P2 and P2/P3}
-#'   \item{b0}{intercept coefficient for 5tx regression on P1/P2 and P2/P3}
-#'   \item{b1}{coefficient for P1/P2 for 5tx regression on P1/P2 and P2/P3}
-#'   \item{b2}{coefficient for P2/P3 for 5tx regression on P1/P2 and P2/P3}
+#'   \item{beta1}{intercept coefficient for qa/5PDx regression on P1/P2 and P2/P3}
+#'   \item{beta2}{coefficient for P1/P2 for qa/5PDx regression on P1/P2 and P2/P3}
+#'   \item{beta3}{coefficient for P2/P3 for qa/5PDx regression on P1/P2 and P2/P3}
+#'   \item{alpha1}{intercept coefficient for 5tx regression on P1/P2 and P2/P3}
+#'   \item{alpha2}{coefficient for P1/P2 for 5tx regression on P1/P2 and P2/P3}
+#'   \item{alpha3}{coefficient for P2/P3 for 5tx regression on P1/P2 and P2/P3}
 #'   \item{PDx_5}{Proportion of deceased children by mother's age group (input)}
 #'   \item{qa_hat}{Estimated probability of dying between birth and age a}
-#'   \item{ref_date}{time at which the respective qa_hat value applies}
+#'   \item{tshift}{time shift from the reference year of survey, to which the qa_hat value applies}
+#'   \item{ref_date}{time at which the respective qa_hat value applies (tsurv - tshift)}
 #' }
 #' @export
 #'
@@ -71,8 +72,9 @@ brass_from_coeffs_to_qx =
     p1p2 = P1 / P2
     p2p3 = P2 / P3
 
-    brass_coeffs$qa_hat   = brass_coeffs$PDx_5  * ( brass_coeffs$a0  + brass_coeffs$a1 * p1p2 + brass_coeffs$a2 * p2p3 )
-    brass_coeffs$ref_date = tsurv - ( brass_coeffs$b0  + brass_coeffs$b1 * p1p2 + brass_coeffs$b2 * p2p3 )
+    brass_coeffs$qa_hat   = brass_coeffs$PDx_5  * ( brass_coeffs$beta1  + brass_coeffs$beta2 * p1p2 + brass_coeffs$beta3 * p2p3 )
+    brass_coeffs$tshitf = ( brass_coeffs$alpha1  + brass_coeffs$alpha2 * p1p2 + brass_coeffs$alpha3 * p2p3 )
+    brass_coeffs$ref_date = tsurv - ( brass_coeffs$alpha1  + brass_coeffs$alpha2 * p1p2 + brass_coeffs$alpha3 * p2p3 )
 
     return( brass_coeffs )
   }

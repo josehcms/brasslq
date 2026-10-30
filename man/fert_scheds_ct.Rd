@@ -5,12 +5,19 @@
 \alias{fert_scheds_ct}
 \title{Fertility Schedules Coale-Trussel}
 \format{
-An object of class \code{data.frame} with 30210 rows and 4 columns.
+A data frame with 4 variables:
+\describe{
+\item{id}{schedule id, there are 795 schedules so id goes form 1 to 795}
+\item{tx_subset}{flag used to indicate whether this id should be used for estimating tx (tx_subset = 1)}
+\item{x}{lower bound of age group (in years)}
+\item{fx}{age-specific fertility rate at age x}
+}
 }
 \usage{
 fert_scheds_ct
 }
 \description{
-A short description of the dataset.
+This dataset contains fertility schedules derived by the Coale-Trussel
+model.
 }
 \keyword{datasets}

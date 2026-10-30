@@ -5,12 +5,22 @@
 \alias{extlogquad_coeffs}
 \title{Extended Log-Quadratic coefficients}
 \format{
-An object of class \code{data.table} (inherits from \code{data.frame}) with 201 rows and 7 columns.
+A data frame (or tibble) with 7 variables:
+\describe{
+\item{sex}{sex (female, male, or total)}
+\item{xi}{age index i}
+\item{x}{lower bound of age group (in days)}
+\item{ax}{ax coefficient}
+\item{bx}{bx coefficient}
+\item{cx}{cx coefficient}
+\item{vx}{vx coefficient; equal to 0 above age 5 years}
+}
 }
 \usage{
 extlogquad_coeffs
 }
 \description{
-A short description of the dataset.
+This dataset contains the set of coefficients used for extending the
+original Log-Quadratic Model from under-5 up to age 50.
 }
 \keyword{datasets}
