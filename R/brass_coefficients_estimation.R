@@ -77,7 +77,7 @@ generate_PDx5_tx5 = function( ages_qx, qx,
   CEBx = rep( NA_real_, length = length( reproductive_span ) )
   for( i in 1:length( reproductive_span ) ){
 
-    y = reproductive_span[i]
+    y = reproductive_span[i] + 0.5
 
     # ages in which we need to evaluate fertility
     ages_fa = ( y - ages_qx )
@@ -147,7 +147,7 @@ generate_PDx5_tx5 = function( ages_qx, qx,
   PDxc = rep( NA_real_, length = length( reproductive_span ) )
   for( i in 1:length( reproductive_span ) ){
 
-    y = reproductive_span[i]
+    y = reproductive_span[i] + 0.5
 
     # ages in which we need to evaluate fertility
     ages_fa = ( y -  ages_Pcx )
@@ -189,7 +189,7 @@ generate_PDx5_tx5 = function( ages_qx, qx,
   PDxt_1yr = matrix( NA_real_, nrow = length( reproductive_span ), ncol = n_t )
   for( i in 1:length( reproductive_span ) ){
 
-    y = reproductive_span[i]
+    y = reproductive_span[i] + 0.5
 
     ages_fa = ( y - ages_Pcx )
     select_ages = which( ages_fa >= childbearing_age_start )
