@@ -61,7 +61,9 @@ generate_PDx5_tx5 = function( ages_qx, qx,
   ## t = 0: time of survey, t = 20: 20 years before survey
   n_t = childbearing_age_end
   qx_decline_trend = 1 + Rd * ( 0:( n_t - 1 ) )
-  qxt = qx %*% t( qx_decline_trend )
+  # qxt = qx %*% t( qx_decline_trend ) - this mimics Coale and Trussel (1977)
+  # to avoid issues in high mortality
+  qxt = pmin( qx %*% t( qx_decline_trend ), 0.999 )
 
   ## 1.B) Convert q(x,t) to L(x,t)
   Lxt = apply( qxt, 2, function( qx ){ qx_to_Lx( ages_qx, qx ) } )
@@ -182,6 +184,24 @@ generate_PDx5_tx5 = function( ages_qx, qx,
 
   }
 
+  ## 2.D2) Period PD(x,t) on the same 1-year age grid as PDxc, so that both sides
+  ## of the t(x) matching share the same discretization
+  PDxt_1yr = matrix( NA_real_, nrow = length( reproductive_span ), ncol = n_t )
+  for( i in 1:length( reproductive_span ) ){
+
+    y = reproductive_span[i]
+
+    ages_fa = ( y - ages_Pcx )
+    select_ages = which( ages_fa >= childbearing_age_start )
+
+    fa = stats::approx( x = ages_fx + 0.5,
+                        y = fx,
+                        xout = ages_fa[ select_ages ] - 0.5,
+                        rule = 2 )$y
+
+    PDxt_1yr[i,] = 1 - ( fa %*% Lxt_1yr[ select_ages, , drop = FALSE ] ) / sum( fa )
+  }
+
   ## 2.E) Estimate t(x) for each mother's age - time to which measure of qa will apply
   times = ( 1:n_t - 1 ) + 0.5
   tx = rep( NA, length(moage_range))
@@ -190,7 +210,7 @@ generate_PDx5_tx5 = function( ages_qx, qx,
     j = which( reproductive_span == y )
     tx[ i ] =
       stats::approx( xout = PDxc[ j ],
-                     x = PDxt[ j, ],
+                     x = PDxt_1yr[ j, ],
                      y = times,
                      rule = 2 )$y
   }
