@@ -15,7 +15,8 @@ brass_logquad(
   r = 0.02,
   Rd = 0.03,
   q5_init = 0.15,
-  tol = 10^-4
+  tol = 10^-4,
+  max_iter = 20
 )
 }
 \arguments{
@@ -42,6 +43,8 @@ and 'fx' for the fertility rate of age group x}
 \item{q5_init}{initial q5 for starting iterative Brass-Log-Quadratic approach}
 
 \item{tol}{tolerance level for q5 convergence (default = 10^-4) in iteration}
+
+\item{max_iter}{maximum number of iterations (default = 20)}
 }
 \value{
 A \code{list} with two data frames: one containing the final iterative Brass results
