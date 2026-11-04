@@ -73,8 +73,8 @@ brass_from_coeffs_to_qx =
     p2p3 = P2 / P3
 
     brass_coeffs$qa_hat   = brass_coeffs$PDx_5  * ( brass_coeffs$beta1  + brass_coeffs$beta2 * p1p2 + brass_coeffs$beta3 * p2p3 )
-    brass_coeffs$tshitf = ( brass_coeffs$alpha1  + brass_coeffs$alpha2 * p1p2 + brass_coeffs$alpha3 * p2p3 )
-    brass_coeffs$ref_date = tsurv - ( brass_coeffs$alpha1  + brass_coeffs$alpha2 * p1p2 + brass_coeffs$alpha3 * p2p3 )
+    brass_coeffs$tshift = ( brass_coeffs$alpha1  + brass_coeffs$alpha2 * p1p2 + brass_coeffs$alpha3 * p2p3 )
+    brass_coeffs$ref_date = tsurv - brass_coeffs$tshift
 
     return( brass_coeffs )
   }
