@@ -24,6 +24,7 @@
 #' @param Rd linear rate of mortality decline
 #' @param q5_init initial q5 for starting iterative Brass-Log-Quadratic approach
 #' @param tol tolerance level for q5 convergence (default = 10^-4) in iteration
+#' @param max_iter maximum number of iterations (default = 20)
 #'
 #' @return A \code{list} with two data frames: one containing the final iterative Brass results
 #' (qa_hat, coefficients), and a second one containing the final dataset corresponding
@@ -58,7 +59,8 @@ brass_logquad =
             k = 0,
             r = 0.02, Rd = 0.03,
             q5_init = 0.150,
-            tol = 10^-4 ){
+            tol = 10^-4,
+            max_iter = 20 ){
 
     # iterate and get final results
     brass_result =
@@ -68,7 +70,7 @@ brass_logquad =
                      fertility_schedules,
                      k, q5 = q5_init,
                      r, Rd,
-                     tol )
+                     tol, max_iter )
 
     # Use q(a) to retrieve U5MR curves using logquad5q0 package
     # We use q(2), q(3), q(5) only! and the selected k

@@ -25,6 +25,7 @@
 #' @param r stable population growth rate
 #' @param Rd linear rate of mortality decline
 #' @param tol tolerance level for q5 convergence (default = 10^-6)
+#' @param max_iter maximum number of iterations (default = 20)
 #'
 #' @return A \code{data.frame} containing the key regression coefficients used
 #' in the Brass method to convert the proportion of deceased children by mother's
@@ -59,12 +60,16 @@ brass_iterate =
             fertility_schedules,
             k, q5,
             r, Rd,
-            tol = 10^-6 ){
+            tol = 10^-6,
+            max_iter = 20 ){
 
     cur_q5 = q5
+    if( !is.finite( q5 ) || q5 <= 0 || q5 >= 1 ){
+      stop( 'brass_iterate: initial q5 must be between 0 and 1.' )
+    }
     epsilon = Inf
     itercount = 1
-    while( epsilon > tol ){
+    while( epsilon > tol & itercount <= max_iter ){
       print( paste0( 'Iteration ', itercount, ' - q5 = ', round( cur_q5, 6 ) ) )
       brass_estimates =
         brass_from_coeffs_to_qx( PDx5,
@@ -74,10 +79,20 @@ brass_iterate =
                                  k,
                                  q5 = cur_q5,
                                  r, Rd )
-      q5_hat = brass_estimates[ 4, ]$qa_hat
+      q5_hat = brass_estimates$qa_hat[ brass_estimates$a == 5 ]
+      # check q5_hat
+      if( length( q5_hat ) != 1 || !is.finite( q5_hat ) || q5_hat <= 0 || q5_hat >= 1 ){
+        stop( paste0( 'brass_iterate: invalid q5 estimate at iteration ', itercount,
+                      ' (q5 = ', signif( q5_hat, 4 ), '). Check PDx5 and P1-P3 inputs.' ) )
+      }
       epsilon = abs( q5_hat - cur_q5 )
       cur_q5 = q5_hat
       itercount = itercount + 1
+    }
+
+    if( epsilon > tol ){
+      warning( paste0( 'brass_iterate did not converge after ', max_iter,
+                       ' iterations (last change in q5 = ', signif( epsilon, 3 ), ')' ) )
     }
 
     return( brass_estimates )
