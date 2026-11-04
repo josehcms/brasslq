@@ -261,7 +261,12 @@ generate_PDx5_tx5 = function( ages_qx, qx,
                 n = c( 1, 2, 3, 5, 10, 15, 20 ),
                 moage = seq( 15, 45, 5 ) )
 
-  qa = qx[ which( ( ages_qx + n_qx ) %in% map_moage_to_qx$n ) ]
+  #qa = qx[ which( ( ages_qx + n_qx ) %in% map_moage_to_qx$n ) ]
+  qa = qx[ match( map_moage_to_qx$n, round( ages_qx + n_qx, 6 ) ) ]
+  if( anyNA( qa ) ){
+    stop( 'generate_PDx5_tx5: could not find q(a) for a = ',
+          paste( map_moage_to_qx$n[ is.na( qa ) ], collapse = ', ' ) )
+  }
   names( qa ) = map_moage_to_qx$n
 
   data.frame( moage_group = age_groups,
