@@ -16,7 +16,8 @@ brass_iterate(
   r,
   Rd,
   tol = 10^-6,
-  max_iter = 20
+  max_iter = 20,
+  n_cores = 1
 )
 }
 \arguments{
@@ -45,6 +46,8 @@ and 'fx' for the fertility rate of age group x}
 \item{tol}{tolerance level for q5 convergence (default = 10^-6)}
 
 \item{max_iter}{maximum number of iterations (default = 20)}
+
+\item{n_cores}{number of cores your machine can use for looping through fertility schedules (default = 1)}
 }
 \value{
 A \code{data.frame} containing the key regression coefficients used

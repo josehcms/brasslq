@@ -14,7 +14,8 @@ brass_from_coeffs_to_qx(
   k,
   q5,
   r,
-  Rd
+  Rd,
+  n_cores = 1
 )
 }
 \arguments{
@@ -39,6 +40,8 @@ and 'fx' for the fertility rate of age group x}
 \item{r}{stable population growth rate}
 
 \item{Rd}{linear rate of mortality decline}
+
+\item{n_cores}{number of cores your machine can use for looping through fertility schedules (default = 1)}
 }
 \value{
 A \code{data.frame} containing the key regression coefficients used

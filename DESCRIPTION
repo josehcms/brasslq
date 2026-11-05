@@ -15,6 +15,7 @@ Config/roxygen2/version: 8.1.1
 URL: https://github.com/josehcms/brasslq
 BugReports: https://github.com/josehcms/brasslq/issues
 Imports: 
-  logquad5q0
+  logquad5q0,
+  parallel
 Remotes: 
   josehcms/logquad5q0

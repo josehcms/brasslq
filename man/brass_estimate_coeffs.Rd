@@ -4,7 +4,7 @@
 \alias{brass_estimate_coeffs}
 \title{Estimate Brass Coefficients}
 \usage{
-brass_estimate_coeffs(fertility_schedules, q5, k, r, Rd)
+brass_estimate_coeffs(fertility_schedules, q5, k, r, Rd, n_cores = 1)
 }
 \arguments{
 \item{fertility_schedules}{a data frame with three columns 'id', which identifies
@@ -18,6 +18,8 @@ and 'fx' for the fertility rate of age group x}
 \item{r}{stable population growth rate}
 
 \item{Rd}{linear rate of mortality decline}
+
+\item{n_cores}{number of cores your machine can use for looping through fertility schedules (default = 1)}
 }
 \value{
 A \code{data.frame} containing the key regression coefficients used

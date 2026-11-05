@@ -21,6 +21,7 @@
 #' @param k value of k parameter in the log-quadratic model (only applied to ages below 5)
 #' @param r stable population growth rate
 #' @param Rd linear rate of mortality decline
+#' @param n_cores number of cores your machine can use for looping through fertility schedules (default = 1)
 #'
 #' @return A \code{data.frame} containing the key regression coefficients used
 #' in the Brass method to convert the proportion of deceased children by mother's
@@ -54,14 +55,16 @@ brass_from_coeffs_to_qx =
             tsurv,
             fertility_schedules,
             k, q5,
-            r, Rd ){
+            r, Rd,
+            n_cores = 1 ){
 
 
     brass_coeffs = brass_estimate_coeffs( fertility_schedules = fertility_schedules,
                                           q5 = q5,
                                           k = k,
                                           r = r,
-                                          Rd = Rd )
+                                          Rd = Rd,
+                                          n_cores = n_cores )
 
     if( nrow( brass_coeffs ) != length( PDx5 ) ){
       warning('Check 5PDx age groups!')

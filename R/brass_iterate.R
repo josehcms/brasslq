@@ -26,6 +26,7 @@
 #' @param Rd linear rate of mortality decline
 #' @param tol tolerance level for q5 convergence (default = 10^-6)
 #' @param max_iter maximum number of iterations (default = 20)
+#' @param n_cores number of cores your machine can use for looping through fertility schedules (default = 1)
 #'
 #' @return A \code{data.frame} containing the key regression coefficients used
 #' in the Brass method to convert the proportion of deceased children by mother's
@@ -61,7 +62,8 @@ brass_iterate =
             k, q5,
             r, Rd,
             tol = 10^-6,
-            max_iter = 20 ){
+            max_iter = 20,
+            n_cores = 1 ){
 
     cur_q5 = q5
     if( !is.finite( q5 ) || q5 <= 0 || q5 >= 1 ){
@@ -78,7 +80,8 @@ brass_iterate =
                                  fertility_schedules,
                                  k,
                                  q5 = cur_q5,
-                                 r, Rd )
+                                 r, Rd,
+                                 n_cores )
       q5_hat = brass_estimates$qa_hat[ brass_estimates$a == 5 ]
       # check q5_hat
       if( length( q5_hat ) != 1 || !is.finite( q5_hat ) || q5_hat <= 0 || q5_hat >= 1 ){

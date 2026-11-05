@@ -294,6 +294,7 @@ generate_PDx5_tx5 = function( ages_qx, qx,
 #' @param k value of k parameter in the log-quadratic model (only applied to ages below 5)
 #' @param r stable population growth rate
 #' @param Rd linear rate of mortality decline
+#' @param n_cores number of cores your machine can use for looping through fertility schedules (default = 1)
 #'
 #' @return A \code{data.frame} containing the key regression coefficients used
 #' in the Brass method to convert the proportion of deceased children by mother's
@@ -322,7 +323,8 @@ brass_estimate_coeffs =
             q5,
             k,
             r,
-            Rd
+            Rd,
+            n_cores = 1
   ){
 
     # map mother's age groups to qa
@@ -339,32 +341,48 @@ brass_estimate_coeffs =
 
     # fertility schedules' ids
     fert_ids = unique( fertility_schedules$id )
-    pb = utils::txtProgressBar( min = 1, max = length(fert_ids), initial = 1 )
+    sched_list = split( fertility_schedules, fertility_schedules$id )
 
-    regression_inputs =
-      do.call(
-        rbind,
-        lapply( fert_ids,
-                function( fert_id ){
-                  # progress bar
-                  utils::setTxtProgressBar( pb, fert_id )
-                  this_fert_sched = fertility_schedules[ which( fertility_schedules$id == fert_id ), ]
-                  fx = this_fert_sched$fx
-                  ages_fx = this_fert_sched$x
+    # run loop across mortality and fertility schedules in parallel
+    # parallel only on systems that support forking, and never more than available cores
+    if( .Platform$OS.type == 'windows' ) n_cores = 1
+    n_cores = max( 1, min( n_cores, parallel::detectCores(), na.rm = TRUE ) )
+    if( n_cores == 1 ){
+      pb = utils::txtProgressBar( min = 1, max = length( fert_ids ), initial = 1 )
+    }
 
-                  PDx5_tx5_df =
-                    data.frame( fert_id = fert_id,
-                                tx_subset = unique( this_fert_sched$tx_subset ),
-                                generate_PDx5_tx5( ages_qx, qx,
-                                                   ages_fx, fx,
-                                                   ages_LxF, LxF,
-                                                   r,
-                                                   Rd ) )
+    # estimate coefficients for each fertility-schedule and mortality pair
+    regression_list =
+      parallel::mclapply( fert_ids,
+                          function( fert_id ){
+                            # progress bar (only when running sequentially)
+                            if( n_cores == 1 ) utils::setTxtProgressBar( pb, fert_id )
+                            this_fert_sched = sched_list[[ as.character( fert_id ) ]]
+                            fx = this_fert_sched$fx
+                            ages_fx = this_fert_sched$x
 
-                  return( PDx5_tx5_df )
-                }
-        )
-      )
+                            PDx5_tx5_df =
+                              data.frame( fert_id = fert_id,
+                                          tx_subset = unique( this_fert_sched$tx_subset ),
+                                          generate_PDx5_tx5( ages_qx, qx,
+                                                             ages_fx, fx,
+                                                             ages_LxF, LxF,
+                                                             r,
+                                                             Rd ) )
+
+                            return( PDx5_tx5_df )
+                          },
+                          mc.cores = n_cores )
+
+    # stop with the real error message if any schedule failed in parallel
+    for( i in 1:length( regression_list ) ){
+      if( class( regression_list[[i]] )[1] == 'try-error' ){
+        stop( paste0( 'Error in fertility schedule id ', fert_ids[i], ': ', regression_list[[i]] ) )
+      }
+    }
+
+    # make list into a data.frame
+    regression_inputs = do.call( rbind, regression_list )
 
     # estimate coefficients for each mother's age group
     age_groups = unique( regression_inputs$moage_group )

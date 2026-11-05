@@ -16,7 +16,8 @@ brass_logquad(
   Rd = 0.03,
   q5_init = 0.15,
   tol = 10^-4,
-  max_iter = 20
+  max_iter = 20,
+  n_cores = 1
 )
 }
 \arguments{
@@ -45,6 +46,8 @@ and 'fx' for the fertility rate of age group x}
 \item{tol}{tolerance level for q5 convergence (default = 10^-4) in iteration}
 
 \item{max_iter}{maximum number of iterations (default = 20)}
+
+\item{n_cores}{number of cores your machine can use for looping through fertility schedules (default = 1)}
 }
 \value{
 A \code{list} with two data frames: one containing the final iterative Brass results
