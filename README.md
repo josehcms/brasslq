@@ -62,13 +62,15 @@ The function returns a list with:
 
 ## Example
 
-Data from the IUSSP *Tools for Demographic Estimation* example for the indirect
-estimation of child mortality
+Data on children ever born and children surviving by age of mother from the **2008 Census
+of Malawi** (reference date: 18 June 2008, i.e., 2008.46), as used in the worked example of the
+IUSSP *Tools for Demographic Estimation* chapter on the indirect estimation of child mortality
 (<https://demographicestimation.iussp.org/content/indirect-estimation-child-mortality>):
 
 ``` r
 library(brasslq)
 
+# Malawi, 2008 Census
 P1    = 0.2833; P2 = 1.5316; P3 = 2.8487
 PDx5  = c( 0.1034, 0.1146, 0.1330, 0.1597, 0.1848, 0.2186, 0.2458 )
 tsurv = 2008.46
@@ -90,17 +92,24 @@ res_ct$u5mr_schedule
 ```
 
 The UN WPP 2024 schedules (`fert_scheds_un`) contain one schedule per country-year (17,464
-schedules). Using all of them is slower; a subset (for example, a region or a set of
-countries selected with `country_code`) and/or `n_cores > 1` is recommended:
+schedules). Using all of them is slower, so a subset (for example, selected years, a region or
+a set of countries selected with `country_code`) and/or `n_cores > 1` is recommended. Here, only
+schedules for years after 1990 are used:
 
 ``` r
+# UN WPP 2024 fertility schedules, years after 1990 only
+fert_un_1990 = fert_scheds_un[ fert_scheds_un$year > 1990, ]
+
 res_un = brass_logquad( PDx5 = PDx5,
                         P1 = P1, P2 = P2, P3 = P3,
                         tsurv = tsurv,
-                        fertility_schedules = fert_scheds_un,
-                        Rd = 0.02, r = 0.02,
+                        fertility_schedules = fert_un_1990,
+                        k = 0, Rd = 0.02, r = 0.02,
                         q5_init = PDx5[4],
-                        n_cores = 8 )
+                        n_cores = 1 )
+
+res_un$brasslq_iterative
+res_un$u5mr_schedule
 ```
 
 ## Data included
